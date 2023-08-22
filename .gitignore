@@ -1,0 +1,15 @@
+.ignore
+.pijul
+.zoxide.nu
+moderatore.nu/
+
+## AUTO GENERATED SYMLINK IGNORE ##
+bin/brec-run
+bin/html2pdf
+bin/ignore-symlinks
+bin/is-laptop-mode
+bin/my-ip
+bin/rime-plum
+bin/rmd
+bin/tarorz
+bin/upgrade-all
