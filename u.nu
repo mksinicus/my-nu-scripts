@@ -8,7 +8,7 @@ export def main [] {
 }
 
 # Git add, commit.
-export def gac [
+export def gacp [
   --message (-m): string
 ] {
   git diff
