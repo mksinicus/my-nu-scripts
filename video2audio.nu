@@ -1,7 +1,7 @@
 #!/usr/bin/env nu
 
 # Use ffmpeg to extract audio from a video
-def main [
+export def main [
   --quiet (-q)          # Be quiet!
   ...filenames: string  # Files to be processed
 ] {
