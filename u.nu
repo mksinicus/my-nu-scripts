@@ -38,6 +38,9 @@ export def link-scripts [] {
 }
 export alias l = link-scripts
 
+export def ignore [] {ignore-symlinks}
+export alias i = ignore
+
 def assert-pwd [] {
   assert (ls -a | '.git' in $in.name)
 }
