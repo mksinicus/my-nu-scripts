@@ -21,6 +21,7 @@ export def-env main [
     return
   } else if $move {
     move-to-dir $slug
+    return
   }
 
   match ($slug | describe) {
