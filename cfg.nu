@@ -20,7 +20,7 @@ export def-env main [
   --move (-m) # Move them here!
 ] {
   let span = (metadata $app).span
-  $env.cfg_list = 'cfg-list.yaml' # YAML's best in this case
+  const cfg_list = 'cfg-list.nu'
   # Get VCS path from $env, exit if there isn't one
   # "Hint: assign $env.CFG_REPO in env.nu"
   # Then cd there within a scope, so that main is not affected
@@ -28,7 +28,7 @@ export def-env main [
   assert --error-label {text: "Can only take one action at a time"} (
     ([($app | not-empty) $list $edit $cd $gacp $pr $move] | find true | length) == 1
   )
-  let ret = do {
+  let ret = collect --keep-env {
     cdrepo
     # Flag switches, mutual exclusive
     # Check flags and switch to corresponding modes,
@@ -36,7 +36,7 @@ export def-env main [
     if $list {
       open-cfgs
     } else if $edit {
-      edit $env.cfg_list
+      edit $cfg_list
     } else if $gacp {
       acp
     } else if $pr {
@@ -44,7 +44,7 @@ export def-env main [
     } else if $move {
       move-here (open-cfgs)
     } else if ($app | not-empty) {
-      edit (open-cfgs | get $app)
+      edit-cfgs $app
     }
   }
 
@@ -52,25 +52,46 @@ export def-env main [
     cdrepo
   }
 
-  hide-env cfg_list # amigo, we're running a `def-env` command
+  # hide-env cfg_list # amigo, we're running a `def-env` command
   return $ret
 }
 
 # For autocomplete and print out
 def get-cfg-list [] {
   # had to define it again before any subsequent call!
-  $env.cfg_list = 'cfg-list.yaml'
+  const cfg_list = 'cfg-list.nu'
   cdrepo
   open-cfgs | columns
 }
 
 def open-cfgs [] {
-  open $env.cfg_list
+  const cfg_list = 'cfg-list.nu'
+  use $cfg_list
+  cfg-list
   | transpose key value
   | update value {
-    |col| $col.value | path expand
+    |col| $col.value | match ($in | describe) {
+      'string' => {$col.value | path expand}
+      'record<file: string, action: closure>' => {
+        $col.value | get file | path expand
+      }
+    }
   }
   | transpose -rd
+}
+
+def-env edit-cfgs [cfg: string] {
+  const cfg_list = 'cfg-list.nu'
+  use $cfg_list
+  cfg-list | get $cfg
+  | match ($in | describe) {
+    'string' => {edit $in}
+    'record<file: string, action: closure>' => {
+      # not sure why `do` removed `--keep-env`
+      collect --keep-env $in.action
+    }
+  }
+  return null
 }
 
 def acp [] {
