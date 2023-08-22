@@ -2,6 +2,7 @@
 .pijul
 .zoxide.nu
 moderatore.nu/
+secrets/
 
 ## AUTO GENERATED SYMLINK IGNORE ##
 bin/brec-run
