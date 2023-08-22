@@ -6,10 +6,10 @@ export use my-math.nu *
 export use my-path.nu *
 export use my-sleep.nu *
 export use my-fp.nu *
-export use my-into/ *
 export use my-dirs.nu *
 export use my-url.nu *
 export use my-ls.nu *
+export use conversions/ *
 
 export use history-recent.nu *
 export use move-recent.nu *

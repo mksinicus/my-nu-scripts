@@ -1,20 +1,21 @@
-# .into-utf8.nu / unicode.nu
+# unicode.nu
 
 # Local aliases
 alias remove = do {|x| str replace -sa ($x | into string) ''}
 alias replace = str replace -sa
 alias contains = str contains
 alias ncontains = str contains -n
+alias core-get = get
 
 # Conversions
 # To get a decimal, use the native `into int -r {2 or 16}`
 
 def "dec2hex" [] {
-  $in | into int | fmt | get upperhex | str substring 2..
+  $in | into int | fmt | core-get upperhex | str substring 2..
 }
 
 def "dec2bin" [] {
-  $in | into int | fmt | get binary | str substring 2..
+  $in | into int | fmt | core-get binary | str substring 2..
 }
 
 def "hex2bin" [] {
@@ -27,9 +28,13 @@ def "bin2hex" [] {
 
 #"
 
+export def main [] {
+  help unicode
+}
 
+alias core-parse = parse
 # Parse text as hex and print Unicode character.
-export def "from unicode" [
+export def parse [
   --decimal (-d)  # From decimal instead of hex.
 ] {
   let temp = [(metadata $in).span, $in]
@@ -67,7 +72,7 @@ def uni-normalize [] {
 }
 
 # Convert hex-represented Unicode into UTF-8
-export def "into utf8" [
+export def get-utf8 [
   --raw (-r) # Output as raw octets instead of Nushell's binary primitive
   --decimal (-d) # Treat input as decimal
   span?: string # Only useful when called by other functions. Do not fill it.
@@ -139,14 +144,14 @@ export def "into utf8" [
           $new
         }
 
-        $in_hex | from unicode | encode utf8 | encode hex
+        $in_hex | parse | encode utf8 | encode hex
         | split chars | chunk 2 | each {|| ['0' 'x'] ++ $in | str join}
         | str join ' '
       } else {
         # fuck, this is buggy anyway
         # binarize-octets $octets
         # I forgot why I didn't do it in the first place
-        $in_hex | from unicode | encode utf8 
+        $in_hex | parse | encode utf8 
       }
       } | if $raw {
       $in | str join ' '
@@ -161,8 +166,8 @@ def get-octets [in_int: int] {
   mut in_bytes = ($in_int | dec2bin)
   # let octet_meta = get-octet-meta $in_int
   let octet_meta = (get-octet-meta $in_int)
-  let prefix = ($octet_meta | get prefix)
-  mut octet_num = ($octet_meta | get octet)
+  let prefix = ($octet_meta | core-get prefix)
+  mut octet_num = ($octet_meta | core-get octet)
   while $octet_num > 1 {
     $octets = ($octets | prepend (
       "10" + ($in_bytes | str substring (-6..))
@@ -188,7 +193,7 @@ def get-octet-meta [in_int: int] {
         octet: ($el.index + 2)
       }
     }
-  } | get 0
+  } | core-get 0
 }
 
 def stringify-octets [octets: list] {
@@ -203,8 +208,8 @@ def binarize-octets [octets: list] {
 }
 
 
-# Get Unicode representation of character(s)
-export def "into unicode" [
+# get Unicode representation of character(s)
+export def get [
   --html(-w)      # HTML Style, p.ex. `&#x13000;`
   --c (-c)        # `\u13000`
   --rust (-r)     # `\u{13000}`
@@ -278,7 +283,7 @@ def hex2str [] {
       if ($e | str starts-with $prefix.item) {
         $e | str substring ($prefix.index + 1)..
       }
-    } | get 0
+    } | core-get 0
   } | str join  | bin2hex
 }
 
@@ -293,13 +298,7 @@ export def "bytes from-string" [] {
   }
 }
 
-# TBD or never, since it's not really something important
-def test [] {
-  let test_data = null
-  assert-eq 1 1 4
-  echo OK
-}
-
+# Should be deprecated with `std assert`... Well, let's not touch what works.
 def assert-eq [x y info] {
   if $x == $y {true} else {panic $info}
 }
