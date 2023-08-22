@@ -31,6 +31,7 @@ export alias g = gacp
 export def link-scripts [] {
   assert-pwd
   cd bin
+  chmod +x *
   ls | where type == file | get name | par-each { |e|
     ln -sf $e ($e | path parse | get stem)
   }
