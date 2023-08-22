@@ -19,7 +19,10 @@ use std assert
 # Simple closures
 # P.ex. `ls | recent 10min`
 export alias recent   = do {|x| where modified > (date now) - $x}
-export alias parse-extension = do {insert extension {|c| $c.name | path parse | get extension}}
+export alias parse-extension = collect { |x|
+  $x | insert extension {|c| $c.name | path parse | get extension}
+  | sort-by extension
+}
 export alias dehuman  = do {update modified {|c| $c.modified | date format %+}}
 export alias today    = do {date now | date format %F}
 export alias datetime = do {date now | date format %+}
