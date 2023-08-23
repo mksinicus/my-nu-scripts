@@ -20,7 +20,7 @@ export def main [
   )
   let renamed = (
     $pristine | to csv -n -s "\t" | vipe |
-    str replace "\t+" "\t" | # remove extra tabs to avoid users' blunder
+    str replace -r "\t+" "\t" | # remove extra tabs to avoid users' blunder
     from csv -n -s "\t" | rename old new
   )
   assert ($pristine != $renamed) "No filename changed, aborting"

@@ -3,7 +3,7 @@
 # not quite what I wanted.
 
 alias index-of = str index-of
-alias replace = str replace -s
+alias replace = str replace
 alias substring = str substring
 
 # Converts url with percent-encoded escapes back to that with Unicode characters

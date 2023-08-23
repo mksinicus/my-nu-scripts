@@ -12,8 +12,8 @@ export def main [
   # Closures. Naive, won't work with globs, but fine here
   let __ls = (if $hidden {{|| ls -a}} else {{|| ls}})
   alias _ls = do $__ls
-  let __replace = (if $regex {{|x y| str replace -a $x $y}}
-                   else {{|x y| str replace -sa $x $y}})
+  let __replace = (if $regex {{|x y| str replace -ra $x $y}}
+                   else {{|x y| str replace -a $x $y}})
   alias _replace = do $__replace
   let __find = (if $regex {{|x| find -r $x}} else {{|x| find $x}})
   alias _find = do $__find

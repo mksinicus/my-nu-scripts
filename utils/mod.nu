@@ -23,10 +23,10 @@ export alias parse-extension = collect { |x|
   $x | insert extension {|c| $c.name | path parse | get extension}
   | sort-by extension
 }
-export alias dehuman  = do {update modified {|c| $c.modified | date format %+}}
-export alias today    = do {date now | date format %F}
-export alias datetime = do {date now | date format %+}
-export alias hhmmss   = do {date now | date format %H:%M:%S}
+export alias dehuman  = do {update modified {|c| $c.modified | format date %+}}
+export alias today    = do {date now | format date %F}
+export alias datetime = do {date now | format date %+}
+export alias hhmmss   = do {date now | format date %H:%M:%S}
 export alias zq       = do {|x| zoxide query $x | str trim}
 export alias negate   = collect {|x| not $x}
 
@@ -66,4 +66,16 @@ export def touchmod [
   touch $filename
   chmod $mode $filename
 }
+
+# Use kdeconnect-cli to send files to phone
+export def send2phone [
+  ...files: glob
+] {
+  let phone_name = 'oryzaParvaMarci'
+  let files = $files | each {glob $in} | flatten
+  for file in $files {
+    kdeconnect-cli -n $phone_name --share $file
+  }
+}
+export alias s2p = send2phone
 

@@ -47,7 +47,7 @@ def wrapped-main [
     ({
       title: $slug
       author: null
-      date: (date now | date format %+)
+      date: (date now | format date %+)
       public: false
       lang: null
     } | to yaml | str trim)
@@ -62,10 +62,12 @@ def wrapped-main [
     input -s $"Creating directory (pwd | path relative-to $env.NOTA_PATH)/($main_file). Press RET to continue, C-c to abort" 
     try {
       $front | save (pwd | path join $main_file)
+      editor $main_file
     } catch {
       match (input "file exists. overwrite? (y/N) ") {
         'y' => {
           $front | save -f (pwd | path join $main_file)
+          editor $main_file
         }
         _ => {abort}
       }

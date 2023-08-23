@@ -1,8 +1,8 @@
 # unicode.nu
 
 # Local aliases
-alias remove = do {|x| str replace -sa ($x | into string) ''}
-alias replace = str replace -sa
+alias remove = do {|x| str replace -a ($x | into string) ''}
+alias replace = str replace -a
 alias contains = str contains
 alias ncontains = str contains -n
 alias core-get = get

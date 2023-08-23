@@ -24,7 +24,7 @@ export def main [files: any] {
   $files | par-each {
     |file|
     let basename = ($file | path parse | $in.parent + '/' + $in.stem)
-    ffmpeg -i $file -c copy $'($basename).mp4'
+    ffmpeg -loglevel error -i $file -c copy $'($basename).mp4'
   }
   return null
 }

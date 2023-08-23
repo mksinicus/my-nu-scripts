@@ -6,6 +6,6 @@ export def "history recent" [
     |col| $col.start_timestamp | into datetime
   } | where start_timestamp > ((date now) - $dur) | update start_timestamp {
     |col| $col.start_timestamp | date to-timezone local |
-    date format "%F %T %Z"
+    format date "%F %T %Z"
   }
 }

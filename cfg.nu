@@ -28,14 +28,18 @@ export def-env main [
   assert --error-label {text: "Can only take one action at a time"} (
     ([($app | not-empty) $list $edit $cd $gacp $pr $move] | find true | length) == 1
   )
-  let ret = collect --keep-env {
+
+  let ret = do {
     cdrepo
     # Flag switches, mutual exclusive
     # Check flags and switch to corresponding modes,
     # since we won't be using subcommands
     if $list {
       open-cfgs
-    } else if $edit {
+    }
+  }
+  export-env {
+    if $edit {
       edit $cfg_list
     } else if $gacp {
       acp
@@ -107,7 +111,7 @@ def acp [] {
     _ => {break-acp}
   }
   git add .
-  git commit -m (date now | date format %F) -e # Force edit commit message
+  git commit -m (date now | format date %F) -e # Force edit commit message
   git push
 }
 

@@ -1,7 +1,7 @@
 # entity.nu
 
 alias remove = do {|x| str replace -a $x ''}
-alias replace = do {|x y| str replace -sa $x $y}
+alias replace = do {|x y| str replace -a $x $y}
 
 export def main [
   ...names: string@entity-list

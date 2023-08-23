@@ -25,7 +25,7 @@ export def path [path?: path] {
 }
 
 alias core-date-now = date now
-alias core-date-format = date format
+alias core-date-format = format date
 export def date [
   format?: string
 ] {

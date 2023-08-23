@@ -81,7 +81,7 @@ def "nu-complete zellij attach" [] {
 }
 
 def "nu-complete sessions" [] {
-  ^zellij ls | lines | str replace -s '(current)' "" | str trim
+  ^zellij ls | lines | str replace '(current)' "" | str trim
 }
 
 # Turned off since it messes with sub-commands
@@ -259,7 +259,7 @@ export def zlj [] {
 export def "zlj kk" [] {
   $in | par-each {
     |e|
-    let e = ($e | str replace -s ' (current)' '')
+    let e = ($e | str replace ' (current)' '')
     zlj k $e
     print ('Killed session `' + $e + '`')
   }
