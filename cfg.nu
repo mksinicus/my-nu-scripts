@@ -38,7 +38,7 @@ export def-env main [
       open-cfgs
     }
   }
-  export-env {
+  collect --keep-env {
     if $edit {
       edit $cfg_list
     } else if $gacp {
