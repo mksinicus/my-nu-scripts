@@ -11,12 +11,14 @@ export-env {
 export def-env main [
   slug?: string
   --no-dir (-n)
+  --open (-o)
   --cd (-c)
   --go-home (-g)
   --move (-m)
 ] {
   let flags = [$cd $go_home $move]
   let no_dir = $no_dir | into int
+  let open = $open | into int
   assert ($flags | find true | length | $in <= 1)
   if $go_home {
     cd $env.NOTA_PATH
@@ -29,7 +31,7 @@ export def-env main [
   match ($slug | describe) {
     'nothing' => {abort}
     _ => {
-      wrapped-main --no-dir $no_dir $slug
+      wrapped-main --no-dir $no_dir --open $open $slug
     }
   }
   if $cd {
@@ -40,8 +42,10 @@ export def-env main [
 def wrapped-main [
   slug: string
   --no-dir (-n): int
+  --open (-o): int
 ] {
   let no_dir = $no_dir | into bool
+  let open = $open | into bool
   let front = [
     '---'
     ({
@@ -50,6 +54,7 @@ def wrapped-main [
       date: (date now | format date %+)
       public: false
       lang: null
+      tags: []
     } | to yaml | str trim)
     '---'
     ''
@@ -59,21 +64,25 @@ def wrapped-main [
 
   if $no_dir {
     let main_file = [$slug $ext] | str join '.'
-    input -s $"Creating directory (pwd | path relative-to $env.NOTA_PATH)/($main_file). Press RET to continue, C-c to abort" 
+    input -s $"Creating file (pwd | path relative-to $env.NOTA_PATH)/($main_file). Press RET to continue, C-c to abort" 
     try {
       $front | save (pwd | path join $main_file)
-      editor $main_file
+      if $open {
+        editor $main_file
+      }
     } catch {
       match (input "file exists. overwrite? (y/N) ") {
         'y' => {
           $front | save -f (pwd | path join $main_file)
-          editor $main_file
+          if $open {
+            editor $main_file
+          }
         }
         _ => {abort}
       }
     }
   } else {
-    input -s $"Creating file (pwd | path relative-to $env.NOTA_PATH)/($slug). Press RET to continue, C-c to abort" 
+    input -s $"Creating dir (pwd | path relative-to $env.NOTA_PATH)/($slug). Press RET to continue, C-c to abort" 
     mkdir $slug
     cd $slug
     try {
@@ -83,7 +92,10 @@ def wrapped-main [
     } catch {
       match (input "file exists. overwrite? (y/N) ") {
         'y' => {
-          $front | save -f (pwd | path join $main_file)
+          $front | save -f $main_file
+          if $open {
+            editor $main_file
+          }
         }
         _ => {abort}
       }

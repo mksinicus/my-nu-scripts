@@ -26,9 +26,12 @@ export alias parse-extension = collect { |x|
 export alias dehuman  = do {update modified {|c| $c.modified | format date %+}}
 export alias today    = do {date now | format date %F}
 export alias datetime = do {date now | format date %+}
-export alias hhmmss   = do {date now | format date %H:%M:%S}
 export alias zq       = do {|x| zoxide query $x | str trim}
 export alias negate   = collect {|x| not $x}
+export alias hms   = do {date now | format date %H:%M:%S}
+export alias ymd = do {|| date now | format date %y-%m-%d}
+
+export alias 'date format' = do {|x| date now | format date $x}
 
 # cd and then ls
 export def-env c [path: path] {

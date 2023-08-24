@@ -1,10 +1,17 @@
+#!/usr/bin/env nu
 # eval.nu
 # Tweaks eval for Nushell in an ugly way
-# Very helpful, if you want to pipe snippets from your favorite editor
-# to be executed by Nushell.
+
+# export const scriptfile = '/tmp/nushell.eval.temp.nu'
+# export alias eval = collect --keep-env {|x: any|
+#   assert ($scriptfile | path exists)
+#   $x | save -f $scriptfile
+#   source $scriptfile
+# }
+
 export def main [
   --edit (-e)
-]: string -> any {
+] {
   let nuscript = (if $edit {$in | vipe --suffix=nu} else $in)
   let scriptfile = (mktemp) + ".nu"
   [
@@ -17,5 +24,19 @@ export def main [
     -c $'let ret = source ($scriptfile); $ret | to nuon'
     | from nuon)
   rm $scriptfile
-  $ret
+  print $ret
+  # | match $in {
+  #   $x if ($x | check-nuon) => {$x | from nuon}
+  #   _ => {}
+  # }
+}
+
+def check-nuon [] {
+  let data = $in
+  try {
+    $data | from nuon
+    true
+  } catch {
+    false
+  }
 }
