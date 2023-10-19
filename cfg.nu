@@ -6,6 +6,8 @@ alias edit = ^($env.EDITOR)
 alias negate = collect {|x| not $x}
 alias not-empty = collect {|x| $x | is-empty | negate}
 
+const cfg_list = 'cfg-list.nu'
+
 # cfg.nu
 # A script to manage application configs (a.k.a. dotfiles)
 # Nushell has `config` and subcommands, but I think I shall take a step further
@@ -20,7 +22,6 @@ export def-env main [
   --move (-m) # Move them here!
 ] {
   let span = (metadata $app).span
-  const cfg_list = 'cfg-list.nu'
   # Get VCS path from $env, exit if there isn't one
   # "Hint: assign $env.CFG_REPO in env.nu"
   # Then cd there within a scope, so that main is not affected
@@ -56,20 +57,17 @@ export def-env main [
     cdrepo
   }
 
-  # hide-env cfg_list # amigo, we're running a `def-env` command
-  return $ret
+  $ret
 }
 
 # For autocomplete and print out
 def get-cfg-list [] {
   # had to define it again before any subsequent call!
-  const cfg_list = 'cfg-list.nu'
   cdrepo
   open-cfgs | columns
 }
 
 def open-cfgs [] {
-  const cfg_list = 'cfg-list.nu'
   use $cfg_list
   cfg-list
   | transpose key value
@@ -85,7 +83,6 @@ def open-cfgs [] {
 }
 
 def-env edit-cfgs [cfg: string] {
-  const cfg_list = 'cfg-list.nu'
   use $cfg_list
   cfg-list | get $cfg
   | match ($in | describe) {

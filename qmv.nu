@@ -30,10 +30,14 @@ export def main [
       msg: "Unconfirmed. Aborting."
     }
   } else {
-    $renamed 
-    | filter {|col| $col.old != $col.new } # Remove unchanged
+    # a trick to avoid circular reference
+    # in a pipe it seems to be lazy
+    let new_renamed = $renamed 
+      | filter {|col| $col.old != $col.new } # Remove unchanged
+      | update old {|col| open -r $col.old} 
+    $new_renamed
     | par-each {
-      |x| mv $x.old $x.new
+      |x| $x.old | save -f $x.new
     }
   }
   return null

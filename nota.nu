@@ -5,6 +5,7 @@ use std assert
 export-env {
   load-env {
     NOTA_PATH: ($env.HOME | path join NutstoreFiles SYNC archivo)
+    NOTA_EXT: "dj"
   }
 }
 
@@ -15,7 +16,9 @@ export def-env main [
   --cd (-c)
   --go-home (-g)
   --move (-m)
+  --yesman (-y)
 ] {
+  $env._yesman = $yesman
   let flags = [$cd $go_home $move]
   let no_dir = $no_dir | into int
   let open = $open | into int
@@ -37,6 +40,7 @@ export def-env main [
   if $cd {
     cd $slug
   }
+  hide-env _yesman
 }
 
 def wrapped-main [
@@ -59,30 +63,27 @@ def wrapped-main [
     '---'
     ''
   ] | str join "\n"
-  let ext = "dj"
-  let main_file = ["index" $ext] | str join '.'
+  # let ext = "dj"
+  let main_file = ["index" $env.NOTA_EXT] | str join '.'
 
   if $no_dir {
-    let main_file = [$slug $ext] | str join '.'
-    input -s $"Creating file (pwd | path relative-to $env.NOTA_PATH)/($main_file). Press RET to continue, C-c to abort" 
+    let main_file = [$slug $env.NOTA_EXT] | str join '.'
+    if not $env._yesman {input -s $"Creating file (pwd | path relative-to $env.NOTA_PATH)/($main_file). Press RET to continue, C-c to abort"} 
     try {
-      $front | save (pwd | path join $main_file)
-      if $open {
-        editor $main_file
-      }
+      $front | save $main_file
     } catch {
-      match (input "file exists. overwrite? (y/N) ") {
+      {match (if not $env._yesman {input "file exists. overwrite? (y/N) "} else {'y'}) {
         'y' => {
-          $front | save -f (pwd | path join $main_file)
-          if $open {
-            editor $main_file
-          }
+          $front | save -f $main_file
         }
         _ => {abort}
-      }
+      }}
+    }
+    if $open {
+      editor $main_file
     }
   } else {
-    input -s $"Creating dir (pwd | path relative-to $env.NOTA_PATH)/($slug). Press RET to continue, C-c to abort" 
+    if not $env._yesman {input -s $"Creating dir (pwd | path relative-to $env.NOTA_PATH)/($slug). Press RET to continue, C-c to abort"} 
     mkdir $slug
     cd $slug
     try {
@@ -90,15 +91,15 @@ def wrapped-main [
       # $front | save $main_file
       $front | save (pwd | path join $main_file)
     } catch {
-      match (input "file exists. overwrite? (y/N) ") {
+      match (if not $env._yesman {input "file exists. overwrite? (y/N) "} else {'y'}) {
         'y' => {
           $front | save -f $main_file
-          if $open {
-            editor $main_file
-          }
         }
         _ => {abort}
       }
+    }
+    if $open {
+      editor $main_file
     }
   }
 }
