@@ -39,14 +39,17 @@ export def-env main [
       open-cfgs
     }
   }
-  collect --keep-env {
+  collect { # no `--keep-env`
     if $edit {
       edit $cfg_list
     } else if $gacp {
+      cdrepo
       acp
     } else if $pr {
+      cdrepo
       pijul record
     } else if $move {
+      cdrepo
       move-here (open-cfgs)
     } else if ($app | not-empty) {
       edit-cfgs $app
@@ -96,6 +99,7 @@ def-env edit-cfgs [cfg: string] {
 }
 
 def acp [] {
+  cdrepo
   def break-acp [] {
     error make {
       msg: "Git add-commit interrupted."
