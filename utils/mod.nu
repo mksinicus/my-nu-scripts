@@ -9,6 +9,7 @@ export use my-fp.nu *
 export use my-dirs.nu *
 export use my-url.nu *
 export use my-ls.nu *
+export use my-fs.nu *
 export use conversions/ *
 
 export use history-recent.nu *
