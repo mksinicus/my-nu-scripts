@@ -20,6 +20,7 @@ export def prm [] {
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
   }
+  $input
 }
 
 def each-rm-r [] {
@@ -46,6 +47,7 @@ export def pmv [
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
   }
+  $input
 }
 
 def each-mv-f-to [to: path] {
@@ -60,21 +62,22 @@ export def pcp [
   assert ($to | path expand | ls -D $in | $in.0.type == dir)
   match ($input | describe) {
     $x if ($x | str starts-with 'table<name: string, type: string') => {
-      $input | get name | each-cp-to $to
+      $input | get name | each-cp-r-to $to
     }
     'list<string>' => {
-      $input | each-cp-to $to
+      $input | each-cp-r-to $to
     }
     'string' => {
-      cp $input $to
+      cp -r $input $to
     }
     _ => {
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
   }
+  $input
 }
 
-def each-cp-to [to: path] {
-  $in | each {|x| cp $x $to}
+def each-cp-r-to [to: path] {
+  $in | each {|x| cp -r $x $to}
 }
 
