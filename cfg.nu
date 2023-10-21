@@ -39,7 +39,7 @@ export def-env main [
       open-cfgs
     }
   }
-  collect { # no `--keep-env`
+  collect --keep-env { # `--keep-env` is for operations such as `cfg rime`
     if $edit {
       edit $cfg_list
     } else if $gacp {
