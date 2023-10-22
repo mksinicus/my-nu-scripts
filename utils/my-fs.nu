@@ -20,6 +20,7 @@ export def prm [] {
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
   }
+  print "Removed:"
   $input
 }
 
@@ -47,6 +48,7 @@ export def pmv [
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
   }
+  print $"Moved to ($to):"
   $input
 }
 
@@ -74,6 +76,7 @@ export def pcp [
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
   }
+  print $"Copied to ($to):"
   $input
 }
 
@@ -81,3 +84,28 @@ def each-cp-r-to [to: path] {
   $in | each {|x| cp -r $x $to}
 }
 
+export def pcd-do [cls: closure] {
+  let input = $in
+  match ($input | describe) {
+    $x if ($x | str starts-with 'table<name: string, type: string') => {
+      $input | where type == dir | get name | each-cd-do $cls
+    }
+    'list<string>' => {
+      $input | each-cd-do $cls
+    }
+    'string' => {
+      $in | each-cd-do $cls
+    }
+    _ => {
+      error make {msg: "Unrecognized input, should be a table, list, or string"}
+    }
+  }
+}
+
+def each-cd-do [cls: closure] {
+  $in | each {
+    |dir|
+    cd $dir
+    do $cls
+  }
+}

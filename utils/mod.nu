@@ -83,3 +83,6 @@ export def send2phone [
 }
 export alias s2p = send2phone
 
+export def ls-gstat [] {
+  ls | pcd-do { print ((ansi lgr) + (pwd) + (ansi reset)); git status }
+}
