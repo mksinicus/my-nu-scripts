@@ -8,7 +8,7 @@ def __check-backup [] {
         (ansi lgr)
         "Last backup is 4 weeks old. Go to ~/backup and run u.nu."
         (ansi reset)
-    ] | str join | print
+    ] | str join | print --stderr
   }
 }
 
