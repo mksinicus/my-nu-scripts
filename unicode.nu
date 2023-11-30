@@ -26,8 +26,6 @@ def "bin2hex" [] {
   $in | into int -r 2 | dec2hex
 }
 
-#"
-
 export def main [] {
   help unicode
 }
@@ -261,7 +259,7 @@ export def get [
 
 # Convert UTF-8 to Unicode hex
 def utf82unicode [] {
-  let utf8_hex = ($in | encode utf8 | dec2hex | 
+  let utf8_hex = ($in | encode utf8 | encode hex | 
   if ($in | str length) mod 2 != 0 {'0' + $in} else {$in} | into string)
   $utf8_hex | hex2str
 }

@@ -1,17 +1,19 @@
 # let dir = ($env.CURRENT_FILE | path basename)
-def __check-backup [] {
+# closure is poor man's object
+do {
+  let backup_threshold = 2wk
   let backup_dir = ('~/backup' | path expand)
+
   cd $backup_dir
-  open 'last-backup-time' | into datetime
-  | if $in < ((date now) - 4wk) {
+  let last_backup_time = open './last-backup-time' | into datetime
+  let duration_since_last = (date now) - $last_backup_time
+  if $duration_since_last > $backup_threshold {
     [
-        (ansi lgr)
-        "Last backup is 4 weeks old. Go to ~/backup and run u.nu."
+        (ansi lgr) # light_green_reverse
+        $"Last backup is ($duration_since_last // 1day) days old."
+        (char nl)
+        "Go to ~/backup and run u.nu."
         (ansi reset)
     ] | str join | print --stderr
   }
 }
-
-__check-backup
-
-

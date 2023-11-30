@@ -9,9 +9,10 @@ export def mv-recent [
   let glob_span = (metadata $glob).span
   let duration_span = (metadata $duration).span
   ls $glob |
-  if ($in | is-empty) { panic {msg: "Command failed" label: "Glob matched no file" span: $glob_span} } else $in |
-  where type == file | where modified > ((date now) - $duration) |
-  if ($in | is-empty) { panic {msg: "Command failed" label: "Given duration matched no file" span: $duration_span} } else $in |
+  if ($in | is-empty) { error make {msg: "Command failed" label: {text: "Glob matched no file" span: $glob_span}} } else $in |
+  where type == "file" | where modified <= (date now) # choring
+  | where modified > ((date now) - $duration) |
+  if ($in | is-empty) { error make {msg: "Command failed" label: {text: "Given duration matched no file" span: $duration_span}} } else $in |
   get name | each {
     |e|
     # quick fix for `--verbose` behavior change
@@ -37,15 +38,4 @@ def-env test [] {
   print 'Test passed'
   cd -
   rm -r $dir
-}
-
-def panic [info] {
-  error make {
-    msg: $info.msg
-    label: {
-      text: $info.label
-      start: $info.span.start
-      end: $info.span.end
-    }
-  }
 }
