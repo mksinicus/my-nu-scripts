@@ -109,3 +109,24 @@ def each-cd-do [cls: closure] {
     do $cls
   }
 }
+
+# NOTE: Don't set url's type to 'path', because that makes nu autoexpand it
+# based on PWD
+export def file-open [url?: string]: any -> nothing {
+  match [$in, $url] {
+    [null, null] => {
+      error make {msg: "Missing argument"}
+    }
+    [$x, null] => {
+      assert (($x | describe) == string) "Type mismatch"
+      ^open $x
+    }
+    [null, $x] => {
+      ^open $x
+    }
+    [$x, $y] => {
+      error make {msg: "Superfluous argument"}
+    }
+  }
+}
+export alias o = file-open
