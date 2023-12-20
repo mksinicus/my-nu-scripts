@@ -3,6 +3,7 @@
 .zoxide.nu
 moderatore.nu/
 secrets/
+modules/
 
 ## AUTO GENERATED SYMLINK IGNORE ##
 bin/brec-run

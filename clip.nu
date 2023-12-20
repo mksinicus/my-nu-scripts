@@ -9,9 +9,10 @@ alias _entity = entity
 # }
 
 # export use std clip
-use std
+# use std
+use modules/system clip
 export def main []: any -> nothing {
-  $in | std clip --silent --no-notify
+  $in | clip --silent --no-notify
 }
 
 export def entity [ent] {

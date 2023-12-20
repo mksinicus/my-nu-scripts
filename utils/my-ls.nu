@@ -1,6 +1,6 @@
 # lsr
 export def lsr [
-  path?: string
+  path?: directory
   --all (-a)
   --long (-l)
 ] {
@@ -13,6 +13,10 @@ export def lsr [
     do $_ls **/*
   } else {
     do $_ls (($path | path expand) + '/**/*')
+    | update name {
+      |col|
+      $col.name | path relative-to (pwd)
+    }
   }
 }
 

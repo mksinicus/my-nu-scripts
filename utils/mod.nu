@@ -36,15 +36,15 @@ export alias ymd = do {|| date now | format date %y-%m-%d}
 # export alias 'date format' = do {|x| date now | format date $x}
 
 # cd and then ls
-export def-env c [path: path] {
+export def --env c [path: path] {
   cd $path
   ls -a
 }
 
 # mdcd
 # mkdir then cd there
-export def-env mdcd [dir: string] {
-  # Had to use `def-env`! I didn't know.
+export def --env mdcd [dir: string] {
+  # Had to use `def --env`! I didn't know.
   mkdir $dir
   cd $dir
 }

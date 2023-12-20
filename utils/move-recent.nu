@@ -23,7 +23,7 @@ export def mv-recent [
   # flatten | str substring '6,' | split column ' to ' | rename 'moved' 'to' |
 }
 
-def-env test [] {
+def --env test [] {
   let dir = $'/tmp/mv-recent-(random uuid)'
   mkdir $dir
   cd $dir

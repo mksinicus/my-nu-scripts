@@ -9,7 +9,7 @@ export-env {
   }
 }
 
-export def-env main [
+export def --env main [
   slug?: string
   --no-dir (-n)
   --open (-o)

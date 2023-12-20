@@ -4,79 +4,52 @@
 
 use std assert
 
-export def prm [] {
+export def eachfile [cls: closure]: any -> list {
   let input = $in
-  match ($input | describe) {
-    $x if ($x | str starts-with 'table<name: string, type: string') => {
-      $input | get name | each-rm-r
-    }
+  let files = match ($input | describe) {
     'list<string>' => {
-      $input | each-rm-r
+      $input
     }
     'string' => {
-      rm -r $input
+      [$input]
+    }
+    $x if ([name type size] | all {$in in ($input | columns)}) => {
+      $input | get name
     }
     _ => {
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
   }
-  print "Removed:"
-  $input
+  $files | each $cls
+  return $files
 }
 
-def each-rm-r [] {
-  $in | each {|x| rm -r $x}
+export def prm [] {
+  let input = $in
+  $input | perfile-do {|| rm -r $in}
+  print -e "Removed:"
+  $input
 }
 
 export def pmv [
   --to (-t): path # directory to move files to
 ] {
   let input = $in
-  assert ($to != null)
+  assert not ($to | is-empty)
   assert ($to | path expand | ls -D $in | $in.0.type == dir)
-  match ($input | describe) {
-    $x if ($x | str starts-with 'table<name: string, type: string') => {
-      $input | get name | each-mv-f-to $to
-    }
-    'list<string>' => {
-      $input | each-mv-f-to $to
-    }
-    'string' => {
-      mv -f $input $to
-    }
-    _ => {
-      error make {msg: "Unrecognized input, should be a table, list, or string"}
-    }
-  }
-  print $"Moved to ($to):"
+  $input | eachfile {|| mv -f $in $to}
+  print -e $"Moved to ($to):"
   $input
-}
-
-def each-mv-f-to [to: path] {
-  $in | each {|x| mv -f $x $to}
 }
 
 export def pcp [
   --to (-t): path # directory to move files to
 ] {
   let input = $in
-  assert ($to != null)
+  assert not ($to | is-empty)
   assert ($to | path expand | ls -D $in | $in.0.type == dir)
-  match ($input | describe) {
-    $x if ($x | str starts-with 'table<name: string, type: string') => {
-      $input | get name | each-cp-r-to $to
-    }
-    'list<string>' => {
-      $input | each-cp-r-to $to
-    }
-    'string' => {
-      cp -r $input $to
-    }
-    _ => {
-      error make {msg: "Unrecognized input, should be a table, list, or string"}
-    }
-  }
-  print $"Copied to ($to):"
+  $input | eachfile {|| cp -r $in $to}
+  print -e $"Copied to ($to):"
   $input
 }
 
@@ -86,6 +59,13 @@ def each-cp-r-to [to: path] {
 
 export def pcd-do [cls: closure] {
   let input = $in
+  def each-cd-do [cls: closure] {
+    $in | each {
+      |dir|
+      cd $dir
+      do $cls
+    }
+  }
   match ($input | describe) {
     $x if ($x | str starts-with 'table<name: string, type: string') => {
       $input | where type == dir | get name | each-cd-do $cls
@@ -99,14 +79,6 @@ export def pcd-do [cls: closure] {
     _ => {
       error make {msg: "Unrecognized input, should be a table, list, or string"}
     }
-  }
-}
-
-def each-cd-do [cls: closure] {
-  $in | each {
-    |dir|
-    cd $dir
-    do $cls
   }
 }
 

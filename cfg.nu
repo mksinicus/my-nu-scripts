@@ -12,7 +12,7 @@ const cfg_list = 'cfg-list.nu'
 # A script to manage application configs (a.k.a. dotfiles)
 # Nushell has `config` and subcommands, but I think I shall take a step further
 # And use a shorter name, of course.
-export def-env main [
+export def --env main [
   app?: string@get-cfg-list
   --list (-l) # List tracked configs
   --edit (-e)
@@ -25,7 +25,7 @@ export def-env main [
   # Get VCS path from $env, exit if there isn't one
   # "Hint: assign $env.CFG_REPO in env.nu"
   # Then cd there within a scope, so that main is not affected
-  # The `def-env` is for certain flags to function
+  # The `def --env` is for certain flags to function
   assert --error-label {text: "Can only take one action at a time"} (
     ([($app | not-empty) $list $edit $cd $gacp $pr $move] | find true | length) == 1
   )
@@ -85,16 +85,18 @@ def open-cfgs [] {
   | transpose -rd
 }
 
-def-env edit-cfgs [cfg: string] {
+def --env edit-cfgs [cfg: string] {
   use $cfg_list
-  cfg-list | get $cfg
-  | match ($in | describe) {
-    'string' => {edit $in}
-    'record<file: string, action: closure>' => {
-      # not sure why `do` removed `--keep-env`
-      collect --keep-env $in.action
+  let cfg = cfg-list | get $cfg
+  let flag = $cfg | match ($in | describe) {
+      'string' => {true}
+      'record<file: string, action: closure>' => {
+        # not sure why `do` removed `--keep-env`
+        collect --keep-env $in.action
+        false
+      }
     }
-  }
+  edit $cfg
   return null
 }
 
@@ -124,6 +126,6 @@ def move-here [cfgs] {
   }
 }
 
-def-env cdrepo [] {
+def --env cdrepo [] {
   cd $env.CFG_REPO
 }
