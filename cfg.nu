@@ -1,5 +1,9 @@
 #!/usr/bin/env nu
 
+export-env {
+  $env.CFG_REPO = ($env.HOME | path join gitrepo my-configs)
+}
+
 use std assert
 
 alias edit = ^($env.EDITOR)
