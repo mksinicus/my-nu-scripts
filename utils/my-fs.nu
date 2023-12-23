@@ -26,7 +26,7 @@ export def eachfile [cls: closure]: any -> list {
 
 export def prm [] {
   let input = $in
-  $input | perfile-do {|| rm -r $in}
+  $input | eachfile {|| rm -r $in}
   print -e "Removed:"
   $input
 }

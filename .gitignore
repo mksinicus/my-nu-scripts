@@ -1,6 +1,6 @@
 .ignore
 .pijul
-.zoxide.nu
+# .zoxide.nu
 moderatore.nu/
 secrets/
 modules/

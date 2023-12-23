@@ -96,7 +96,7 @@ def --env edit-cfgs [cfg: string] {
         false
       }
     }
-  edit $cfg
+  if $flag {edit $cfg}
   return null
 }
 
@@ -122,7 +122,7 @@ def move-here [cfgs] {
   $cfgs | transpose name path | par-each {
     |it|
     mkdir $it.name
-    ln -f ($it.path | path expand) $"./($it.name)/"
+    cp -f ($it.path | path expand) $"./($it.name)/"
   }
 }
 
