@@ -80,7 +80,7 @@ alias uh = overlay hide u
 # While they are inside $env.NU_LIB_DIRS, no need to write full path
 
 # backup prompt; no command
-use backup.nu
+use backup-prompt.nu
 
 use clip.nu
 
