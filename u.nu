@@ -7,6 +7,7 @@ export def main [] {
   # default function
   assert-pwd
   link-scripts
+  ignore-symlinks
   let msg = date now | format date %F | "Update " + $in
   gacp -m $msg
 }
@@ -38,8 +39,22 @@ export def link-scripts [] {
 }
 export alias l = link-scripts
 
-export def ignore [] {ignore-symlinks}
-export alias i = ignore
+export def ignore-symlinks [] {
+  let filename = ".gitignore"
+  assert ($filename | path exists)
+  let ignore_list = open $filename | lines
+  let separator = "## AUTO GENERATED SYMLINK IGNORE ##"
+  if not $separator in $ignore_list {
+    $separator + "\n" | save -a $filename
+  }
+  ls **/* | where type == symlink | get name | each {|symlink|
+    if not $symlink in $ignore_list {
+      $symlink + "\n" | save -a $filename
+    }
+  }
+  null
+}
+export alias i = ignore-symlinks
 
 def assert-pwd [] {
   assert (ls -a | '.git' in $in.name)

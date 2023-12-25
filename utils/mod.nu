@@ -12,14 +12,16 @@ export use my-ls.nu *
 export use my-fs.nu *
 export use conversions/ *
 
-export use history-recent.nu *
-export use move-recent.nu *
+export use recent.nu
+export use move-recent.nu ['mv-recent']
+
+# use `history | recent` instead
+# export use history-recent.nu ['history recent']
 
 use std assert
 
 # Simple closures
 # P.ex. `ls | recent 10min`
-# export alias recent   = do {|x| where modified > (date now) - $x}
 export alias parse-extension = collect { |x|
   $x | insert extension {|c| $c.name | path parse | get extension}
   | sort-by extension
@@ -70,32 +72,6 @@ export def touchmod [
   }
   touch $filename
   chmod $mode $filename
-}
-
-export def recent [duration: duration] {
-  let temp = [$in, (metadata $in).span]
-  let tab = $temp.0
-  let tab_span = $temp.1
-  let duration_span = (metadata $duration).span
-  match ($tab | columns) {
-    $x if ('modified' in $x) => { # ls
-      $tab | where modified > (date now) - $duration
-    }
-    $x if ('start_timestamp' in $x) => { # history
-      $tab | update start_timestamp {|c| $c.start_timestamp | into datetime}
-      | where start_timestamp > (date now) - $duration
-      | update start_timestamp {|c| $c.start_timestamp | format date "%F %T %Z"}
-    }
-    _ => {
-      error make {
-        msg: "Invalid input"
-        label: {
-          text: "No applicable column found in table"
-          span: $tab_span
-        }
-      }
-    }
-  }
 }
 
 # Use kdeconnect-cli to send files to phone
