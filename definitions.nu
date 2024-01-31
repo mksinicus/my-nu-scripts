@@ -1,27 +1,35 @@
-# A pseudo package manager.
-# So that most definitions are greppable from here.
+# A pseudo package manager in the scripts directory.
+# Just so that most user definitions are greppable from here.
+#
+# Module definitions are marked with `export` so that these can be used
+# in an external script with `use definitions.nu *`.
+#
+# Note that this may slightly alter the behavior of this file.
+#
+# Aliases, however, are to be avoided in such use cases.
+# Also, we discourage using short aliases in scripting.
 
 ## Externals
 
-use starship.nu
+export use starship.nu
 
-use broot.nu [br]
+export use broot.nu [br]
 
-use zoxide.nu [z, zi]
+export use zoxide.nu [z, zi]
 
 ## Custom completions/externs
 
 # Subcommands ain't good for an editor
 # use /home/marco/nu/externs/helix.nu *
 
-use externs/zellij.nu *
+export use externs/zellij.nu *
 
-use externs/tar.nu *
+export use externs/tar.nu *
 
-use externs/pijul.nu *
+export use externs/pijul.nu *
 
 # Get just the extern definitions without the custom completion commands
-use externs/git.nu *
+export use externs/git.nu *
 
 ## Applications aliases/shorthands
 
@@ -51,6 +59,13 @@ alias r = ^radian
 
 alias pc = ^proxychains
 
+## Applications outside my PATH
+
+alias downkyi = do {
+  cd ('~' | path join 'utilitate' 'downkyi')
+  ^wine 'DownKyi.exe'
+}
+
 ## Shell command shorthands
 
 alias l = ls
@@ -77,46 +92,49 @@ alias uh = overlay hide u
 
 ## Private
 
+# switched to dir-based module
+export use utils/ *
+
+# Background Task (https://www.nushell.sh/book/background_task.html)
+export use job.nu
+
 # While they are inside $env.NU_LIB_DIRS, no need to write full path
 
 # backup prompt; no command
-use backup-prompt.nu
+export use backup-prompt.nu
 
-use clip.nu
+export use clip.nu
 
-use paste.nu
+export use paste.nu
 
-use renamer.nu
+export use renamer.nu
 alias rnm = renamer
 
-use entity.nu
+export use entity.nu
 
-use unicode.nu
+export use unicode.nu
 
-use rmd-new.nu
+export use rmd-new.nu
 
-use m3u82mp4.nu
+export use m3u82mp4.nu
 
-use mdmake.nu
+export use mdmake.nu
 
-use video2audio.nu
+export use video2audio.nu
 alias v2a = video2audio
 
-use my2fa.nu
+export use my2fa.nu
 
-use eval.nu
+export use eval.nu
 
-use anki-make.nu
+export use anki-make.nu
 
-use qmv.nu
+export use qmv.nu
 
-use cfg.nu
+export use cfg.nu
 
-use nota.nu
+export use nota.nu
 alias nt = nota
 
-# switched to dir-based module
-use utils/ *
-
-# Background Task (https://www.nushell.sh/book/background_task.html)
-use job.nu
+export use html-to-markdown.nu
+alias h2m = html-to-markdown

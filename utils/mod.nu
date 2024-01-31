@@ -29,6 +29,7 @@ export alias parse-extension = collect { |x|
 export alias dehuman  = do {update modified {|c| $c.modified | format date %+}}
 export alias today    = do {date now | format date %F}
 export alias datetime = do {date now | format date %+}
+export alias date-id = do {date now | format date %Y%m%d%H%m%S}
 export alias zq       = do {|x| zoxide query $x | str trim}
 export alias negate   = collect {|x| not $x}
 export alias hms   = do {date now | format date %H:%M:%S}
@@ -79,7 +80,8 @@ export def send2phone [
   ...files: glob
 ] {
   let phone_name = 'oryzaParvaMarci'
-  let files = $files | each {glob $in} | flatten
+  let files = $files
+  | each {|e| try {glob $e} catch {$e | path expand}} | flatten
   for file in $files {
     kdeconnect-cli -n $phone_name --share $file
   }

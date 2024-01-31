@@ -13,7 +13,7 @@ def default-config [
 
 export def main [
   ...dirs: glob
-  --ignore-dollar
+  --ignore-dollar (-p)
   --include-empty # not implemented yet
   --new (-n) # initialize
 ] {
@@ -22,17 +22,17 @@ export def main [
     return
   }
 
-  let dirs = $dirs | par-each {|d| ls --directory $d} | flatten
+  let dirs = $dirs | each {|d| ls --directory $d} | flatten
   assert ($dirs | all {|col| $col.type == 'dir'})
   $dirs | get name | par-each {
     |dir|
-    anki-make-once $dir --ignore-dollar $ignore_dollar
+    anki-make-once $dir --ignore-dollar=$ignore_dollar
   }
 }
 
 def anki-make-once [
   dir: path
-  --ignore-dollar: bool
+  --ignore-dollar
 ] {
   let olddir = pwd
   cd $dir
@@ -41,7 +41,7 @@ def anki-make-once [
   } catch {
     default-config $dir
   }
-  let tempfile = mktemp
+  let tempfile = mktemp -t
   # two newlines just in case...
   ['# ' $config.name "\n\n"] | str join | save -a $tempfile
   # recursive under src/
@@ -49,12 +49,12 @@ def anki-make-once [
     |f|
     open -r $f
   } | str join "\n\n" | save -a $tempfile
-  match $ignore_dollar {
+  let ret = match $ignore_dollar {
     true => {
       (md2apkg
         --input $tempfile
         --output ($olddir | path join $"($dir).apkg") # use dirname as filename
-        # --ignore-levels 3
+        # --ignore-levels 3 # This just removes h3 sections
         --ignore-latex-dollar-syntax
         --deck-name $config.name)
     }
@@ -62,10 +62,13 @@ def anki-make-once [
       (md2apkg
         --input $tempfile
         --output ($olddir | path join $"($dir).apkg") # use dirname as filename
-        # --ignore-levels 3
+        --ignore-levels '3'
         --deck-name $config.name)
     }
   }
+  rm $tempfile
+
+  $ret
 }
 
 def anki-txt-to-apkg2md [file: path] {
