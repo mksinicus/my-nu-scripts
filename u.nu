@@ -33,7 +33,7 @@ export def link-scripts [] {
   assert-pwd
   cd bin
   chmod +x *
-  ls | where type == file | get name | par-each { |e|
+  ls | where type == file | get name | par-each {|e|
     ln -sf $e ($e | path parse | get stem)
   }
 }
@@ -44,11 +44,11 @@ export def ignore-symlinks [] {
   assert ($filename | path exists)
   let ignore_list = open $filename | lines
   let separator = "## AUTO GENERATED SYMLINK IGNORE ##"
-  if not $separator in $ignore_list {
+  if not ($separator in $ignore_list) {
     $separator + "\n" | save -a $filename
   }
   ls **/* | where type == symlink | get name | each {|symlink|
-    if not $symlink in $ignore_list {
+    if not ($symlink in $ignore_list) {
       $symlink + "\n" | save -a $filename
     }
   }

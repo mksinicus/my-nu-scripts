@@ -136,5 +136,7 @@ export use cfg.nu
 export use nota.nu
 alias nt = nota
 
+export use ifc.nu
+
 export use html-to-markdown.nu
 alias h2m = html-to-markdown
