@@ -51,22 +51,24 @@ export def parse [
     )
     $uni | uni-normalize | each {
       |e|
-      $e | if $decimal {
-        char -i ($in | into int)
+      if $decimal {
+        char -i ($e | into int)
       } else {
-        char -u $in
+        char -u $e
       }
     } | str join
   }
 }
 
 def uni-normalize [] {
-  $in | remove '0x' |
-  remove 'U+' |
-  remove '&#x' | remove '&#' |
-  remove '{' | remove '}' |
-  replace '\u' ' ' |
-  replace ';' ' ' | str trim | split row ' '
+  $in | remove '0x'
+  | remove 'U+'
+  | remove 'u+'
+  | remove '&#x' | remove '&#'
+  | remove '{' | remove '}'
+  | replace '\u' ' '
+  | replace ';' ' '
+  | str trim | split row ' '
 }
 
 # Convert hex-represented Unicode into UTF-8

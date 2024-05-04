@@ -77,10 +77,10 @@ export def touchmod [
 
 # Use kdeconnect-cli to send files to phone
 export def send2phone [
-  ...files: glob
+  ...files: string
 ] {
   let phone_name = 'oryzaParvaMarci'
-  let files = $files
+  let files = $files | flatten
   | each {|e| try {glob $e} catch {$e | path expand}} | flatten
   for file in $files {
     kdeconnect-cli -n $phone_name --share $file

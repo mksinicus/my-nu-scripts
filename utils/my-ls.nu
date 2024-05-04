@@ -4,15 +4,16 @@ export def lsr [
   --all (-a)
   --long (-l)
 ] {
-  let _ls = (if $all and $long {{|x| ls -la $x}} else 
-            if $all {{|x| ls -a $x}} else
-            if $long {{|x| ls -l $x}} else
-            {{|x| ls $x}})
+  alias ls = ls --all=$all --long=$long
+  # let _ls = (if $all and $long {{|x| ls -la $x}} else 
+  #           if $all {{|x| ls -a $x}} else
+  #           if $long {{|x| ls -l $x}} else
+  #           {{|x| ls $x}})
   
   if $path == null {
-    do $_ls **/*
+    ls `**/*`
   } else {
-    do $_ls (($path | path expand) + '/**/*')
+    ls (($path | path expand) + '/**/*')
     | update name {
       |col|
       $col.name | path relative-to (pwd)

@@ -3,7 +3,7 @@
 use recent.nu
 
 export def mv-recent [
-  glob: glob # Filename glob provided to `ls`, file only (no dir nor symlink)
+  glob: string # Filename glob provided to `ls`, file only (no dir nor symlink)
   dest: string # Destination
   duration: duration
   --save (-s) # Save moving result to nuon
@@ -11,7 +11,7 @@ export def mv-recent [
   let glob_span = (metadata $glob).span
   let duration_span = (metadata $duration).span
 
-  ls $glob
+  ls ($glob | into glob)
   | if ($in | is-empty) {
     error make {
       msg: "Command failed"

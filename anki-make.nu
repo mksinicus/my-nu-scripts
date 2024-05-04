@@ -12,7 +12,7 @@ def default-config [
 }
 
 export def main [
-  ...dirs: glob
+  ...dirs: string
   --ignore-dollar (-p)
   --include-empty # not implemented yet
   --new (-n) # initialize
