@@ -4,7 +4,7 @@
 alias remove = do {|x| str replace -a ($x | into string) ''}
 alias replace = str replace -a
 alias contains = str contains
-alias ncontains = str contains -n
+alias ncontains = do {|x| not (str contains $x)}
 alias core-get = get
 
 # Conversions

@@ -143,5 +143,5 @@ export use ifc.nu
 export use html-to-markdown.nu
 alias h2m = html-to-markdown
 
-export use katalog.nu
-alias ktlg = katalog
+overlay use --prefix katalog.nu as ktlg
+# alias ktlg = katalog

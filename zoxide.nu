@@ -31,7 +31,7 @@ def __zoxide-query-list []: nothing -> list<string> {
 # Jump to a directory using only keywords.
 def --env __zoxide_z [...rest: string@__zoxide-query-list] {
   let arg0 = ($rest | append '~').0
-  let path = if (($rest | length) <= 1) and ($arg0 == '-' or ($arg0 | path expand | path type) == dir) {
+  let path = if (($rest | length) <= 1) and ($arg0 == '-' or ($arg0 | path expand | try {$in | path type} catch {null}) == dir) {
     $arg0
   } else {
     (zoxide query --exclude $env.PWD -- ...$rest | str trim -r -c "\n")
