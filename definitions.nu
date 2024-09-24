@@ -68,6 +68,9 @@ alias downkyi = do {
   ^wine 'DownKyi.exe'
 }
 
+# tablet driver
+alias xppen = sudo bash /usr/lib/pentablet/PenTablet.sh
+
 ## Shell command shorthands
 
 alias l = ls
@@ -143,5 +146,10 @@ export use ifc.nu
 export use html-to-markdown.nu
 alias h2m = html-to-markdown
 
+export use tinytex.nu
+
+export use forest.nu
+
 overlay use --prefix katalog.nu as ktlg
 # alias ktlg = katalog
+

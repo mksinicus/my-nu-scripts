@@ -66,8 +66,7 @@ export def touchmod [
     | is-empty
     | negate
   ) --error-label {
-    start: $span_m.start
-    end: $span_m.end
+    span: $span_m
     text: ([$"chmod: invalid mode: '($mode)'"
              "try 'chmod --help' for more information."] | str join "\n")
   }

@@ -2,6 +2,8 @@
 # After writing this I became aware of builtin command `from url`. But that's
 # not quite what I wanted.
 
+use unicode.nu ['bytes from-string']
+
 alias index-of = str index-of
 alias replace = str replace
 alias substring = str substring
@@ -49,14 +51,3 @@ def decode-once [] {
   }
   $muturl
 }
-
-# Hoc capito ab `.into-utf8.nu`
-def "bytes from-string" [] {
-  $in | each {
-    |e| 
-    $e | into string | split row ' ' |
-    into int -r 16 | each {$in | into binary} |
-    bytes remove -a 0x[00] | bytes collect
-  }
-}
-

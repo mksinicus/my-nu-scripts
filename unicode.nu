@@ -292,10 +292,11 @@ export def "bytes from-string" [] {
   # And comments inside closure will make it malfunction... How strange!
   $in | each {
     |e| 
-    $e | into string | split row ' ' |
-    into int -r 16 | each {$in | into binary} |
-    bytes remove -a 0x[00] | bytes collect
+    $e | into string | split row ' '
+    | into int -r 16 | each {$in | into binary}
+    | bytes remove -a 0x[00]
   }
+  | bytes collect
 }
 
 # Should be deprecated with `std assert`... Well, let's not touch what works.

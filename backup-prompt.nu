@@ -17,5 +17,6 @@ export-env {
           (ansi reset)
       ] | str join | print --stderr
     }
+    return null
   }
 }

@@ -36,7 +36,7 @@ export def pmv [
 ] {
   let input = $in
   assert not ($to | is-empty)
-  assert ($to | path expand | ls -D $in | $in.0.type == dir)
+  assert ($to | path type | $in == 'dir')
   $input | eachfile {|| mv -f $in $to}
   print -e $"Moved to ($to):"
   $input
@@ -47,7 +47,7 @@ export def pcp [
 ] {
   let input = $in
   assert not ($to | is-empty)
-  assert ($to | path expand | ls -D $in | $in.0.type == dir)
+  assert ($to | path type | $in == 'dir')
   $input | eachfile {|| cp -r $in $to}
   print -e $"Copied to ($to):"
   $input

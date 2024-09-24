@@ -21,6 +21,7 @@ export def main [
       --commands $'let ret = source ($scriptfile); $ret | to nuon'
       err> /dev/null
     )} | from nuon
+    | $in + "\n"
   } catch {
     null
   }
