@@ -106,7 +106,7 @@ export use job.nu
 # While they are inside $env.NU_LIB_DIRS, no need to write full path
 
 # backup prompt; no command
-export use backup-prompt.nu
+# export use backup-prompt.nu
 
 export use clip.nu
 

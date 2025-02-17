@@ -1,7 +1,9 @@
 #!/usr/bin/env nu
 
 export-env {
-  $env.CFG_REPO = ($env.HOME | path join gitrepo my-configs)
+  $env.CFG_REPO = $env.HOME | path join nu cfg-repo-path
+                  | open -r $in
+                  | str trim | path expand
 }
 
 use std assert

@@ -11,11 +11,11 @@ alias core-get = get
 # To get a decimal, use the native `into int -r {2 or 16}`
 
 def "dec2hex" [] {
-  $in | into int | fmt | core-get upperhex | str substring 2..
+  $in | into int | format number | core-get upperhex | str substring 2..
 }
 
 def "dec2bin" [] {
-  $in | into int | fmt | core-get binary | str substring 2..
+  $in | into int | format number | core-get binary | str substring 2..
 }
 
 def "hex2bin" [] {

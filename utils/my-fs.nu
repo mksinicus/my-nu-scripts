@@ -84,21 +84,27 @@ export def pcd-do [cls: closure] {
 
 # NOTE: Don't set url's type to 'path', because that makes nu autoexpand it
 # based on PWD
-export def file-open [url?: string]: any -> nothing {
-  match [$in, $url] {
-    [null, null] => {
-      error make {msg: "Missing argument"}
-    }
-    [$x, null] => {
-      assert (($x | describe) == string) "Type mismatch"
-      ^open $x
-    }
-    [null, $x] => {
-      ^open $x
-    }
-    [$x, $y] => {
-      error make {msg: "Superfluous argument"}
-    }
-  }
-}
-export alias o = file-open
+# export def file-open [url?: string]: any -> nothing {
+#   match [$in, $url] {
+#     [null, null] => {
+#       error make {msg: "Missing argument"}
+#     }
+#     [$x, null] => {
+#       assert (($x | describe) == string) "Type mismatch"
+#       ^open $x
+#     }
+#     [null, $x] => {
+#       ^open $x
+#     }
+#     [$x, $y] => {
+#       # error make {msg: "Superfluous argument"}
+#       ^open $y
+#     }
+#   }
+# }
+export alias o = start
+
+# export def files-open [...urls] {
+#   $urls | par-each { file-open } | ignore
+# }
+# export alias oo = files-open

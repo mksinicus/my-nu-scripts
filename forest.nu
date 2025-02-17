@@ -10,9 +10,12 @@ const forest_code_0 = r#'
 \usepackage{unicode-math}
 \usepackage{xeCJK}
 \setmainfont{STIX Two Text}
+\setmathfont{STIX Two Math}
 % \setmathfont[Path=D:/\string~fonts/]{STIXTwoMath-Regular.otf}
 % \setCJKmainfont{Noto Serif CJK SC}
 \newcommand{\tx}{\text}
+\newcommand{\pr}{\( ' \)}
+\newcommand{\dpr}{\( '' \)}
 
 \begin{document} 
 

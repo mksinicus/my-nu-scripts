@@ -28,7 +28,7 @@ export def "into hex" [] {
   
   # Perfomance note: conversion of 10000 random integers (ranging from 70 to
   # 18000) cost 7s265ms before and 251ms after.
-  $in | fmt | get upperhex
+  $in | format number | get upperhex
 }
 
 

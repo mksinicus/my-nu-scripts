@@ -63,7 +63,7 @@ def yield-date [
 }
 
 def get-ifc-date [date: datetime] {
-  let $year = $date | date to-record | get year
+  let $year = $date | into record | get year
   let $leap = $year | is-leap-year
   let $yearday = $date - ($'($year)-01-01' | into datetime)
               | $in / 1day | math ceil
@@ -102,7 +102,7 @@ def get-ifc-date [date: datetime] {
     }
   }
 
-  $date | date to-record | merge {
+  $date | into record | merge {
     year: $year
     month: $month
     day: $monthday

@@ -13,7 +13,7 @@ export def main [
     # Naive `each` -> `par-each` plus `sort-by` -> builtin cellpath commands
     return (open $json_path | transpose name character |
     insert unicode {
-      |cols| $cols.character | fmt | get upperhex
+      |cols| $cols.character | format number | get upperhex
     } |
     update character {
       |cols| char -i $cols.character

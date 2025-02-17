@@ -78,6 +78,7 @@ export def touchmod [
 export def send2phone [
   ...files: string
 ] {
+  # To be modified to read from local file!
   let phone_name = 'oryzaParvaMarci'
   let files = $files | flatten
   | each {|e| try {glob $e} catch {$e | path expand}} | flatten
@@ -89,4 +90,21 @@ export alias s2p = send2phone
 
 export def ls-gstat [] {
   ls | pcd-do { print ((ansi lgr) + (pwd) + (ansi reset)); git status }
+}
+
+export def font-install [path? = '.'] {
+  let is_font = {|x|
+    ['.ttf' '.ttc' '.otf']
+    | any {|y| $x | str ends-with --ignore-case $y}
+  }
+  ls $path
+  | get name
+  | filter $is_font
+  | par-each {|x| cp -v $x ~/.local/share/fonts/}
+  | ignore
+}
+
+export def upgrade-all [] {
+  # apt
+  sudo apt update; sudo apt upgrade -y
 }
